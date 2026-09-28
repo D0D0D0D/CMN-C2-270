@@ -1,0 +1,43 @@
+# Runtime configuration — CMN-C2-270
+# Hoisted from the legacy config/agent.yaml agent.config block.
+
+max_retry: 3
+timeout_seconds: 30
+
+# S-3 individual-product-recommendation guard.
+guard_regen_max: 2
+product_name_blocklist: []
+
+# Peer-trend RAG k-anonymity.
+k_anonymity_min: 10
+peer_top_k: 10
+
+# SDK QdrantVectorStore. Disabled keeps the documented projection-only
+# degradation for deployments that do not provision a peer-trend KB.
+# When enabled, every field below is required and invalid configuration aborts
+# startup. Use a dedicated Qdrant endpoint per company/deployment.
+vector_store:
+  enabled: false
+  url: "http://qdrant:6333"
+  collection_name: "cmn_c2_270_peer_trends"
+  namespace: "cmn"
+  agent_name: "cmn_c2_270"
+  vector_size: 1536
+  distance: "cosine"
+  timeout_s: 30
+  write_timeout_s: 60
+  max_batch_documents: 1000
+  max_top_k: 100
+  embedding_base_url: "https://api.openai.com/v1"
+  embedding_model: "text-embedding-3-small"
+  embedding_api_version: "2024-02-15-preview"
+  embedding_provider: "openai"
+
+# Deterministic life-plan calculation defaults.
+calc_config:
+  annual_return_rate: 0.03
+  inflation_rate: 0.02
+  salary_growth_rate: 0.015
+  retirement_age: 65
+  projection_end_age: 100
+  pension_estimation_mode: "certificate_input"

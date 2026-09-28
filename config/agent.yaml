@@ -1,0 +1,31 @@
+# Agent Manifest — AgentRegistry entry point
+# AgentRegistry reads these keys at ROOT level. Runtime parameters live in
+# config/config.yaml and are passed as Graph(config=...).
+
+id: "CMN-C2-270"
+name: "Employee Financial Wellness Self-Advisory Agent"
+namespace: "cmn"
+version: "1.0.0"
+enabled: true
+category: "Cat 2"
+# Static generation contract. Omitted by legacy templates defaults to deterministic.
+# This AG drives its LLM stage through the config["llm"] injection seam (BaseLLM), so the
+# truthful declaration is llm — omitting it would record an LLM template as deterministic.
+generation_mode: "llm"  # deterministic | llm
+industry: "CMN"
+
+# L1 base graph type (Cat 2: AgentBaseGraph outer + GraphNode inner workflow)
+base_type: "AgentBaseGraph"
+
+# Entry point — single dotted import path (module.Class), not module:/class: split.
+class: "src.graph.graph.WellnessAdvisoryGraph"
+
+# Security
+required_trust_level: "VERIFIED_EXTERNAL"
+
+# Secret keys the agent requires at runtime (ctx.secrets.require()).
+requires:
+  secrets:
+    - ANTHROPIC_API_KEY
+    - PEER_TREND_EMBEDDING_API_KEY
+  extras: []
